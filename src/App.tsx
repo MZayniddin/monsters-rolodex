@@ -1,11 +1,27 @@
-import { Component } from "react";
-import "./App.css";
+import { Component, ChangeEvent } from "react";
 import CardList from "./components/card-list/CardList";
 import SearchBox from "./components/search-box/SearchBox";
 
-class App extends Component {
-  constructor() {
-    super();
+import { getData } from "./utils/data.utils";
+
+import "./App.css";
+
+export type Monster = {
+  id: string;
+  name: string;
+  email: string;
+};
+
+interface IProps {}
+
+interface IState {
+  monsters: Monster[];
+  searchField: string;
+}
+
+class App extends Component<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
 
     this.state = {
       monsters: [],
@@ -17,16 +33,19 @@ class App extends Component {
 
   componentDidMount() {
     console.log("Did Mounted");
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((res) => res.json())
-      .then((data) =>
-        this.setState(() => {
-          return { monsters: data };
-        })
+
+    const fetchUsers = async () => {
+      const users = await getData<Monster[]>(
+        "https://jsonplaceholder.typicode.com/users"
       );
+
+      this.setState({ monsters: users });
+    };
+
+    fetchUsers();
   }
 
-  onSearchChange = (e) => {
+  onSearchChange = (e: ChangeEvent<HTMLInputElement>): void => {
     this.setState(() => {
       return {
         searchField: e.target.value.toLowerCase(),

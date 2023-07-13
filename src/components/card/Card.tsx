@@ -1,7 +1,13 @@
 import { Component } from "react";
+import { Monster } from "../../App";
+
 import "./Card.css";
 
-export class Card extends Component {
+type CardProps = {
+  monster: Monster;
+};
+
+export class Card extends Component<CardProps> {
   render() {
     const { id, name, email } = this.props.monster;
     return (
